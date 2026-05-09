@@ -15,11 +15,11 @@
         android:supportsRtl="true"
         tools:targetApi="36">
 
-        <activity android:name=".ui.MainActivity"
+        <activity android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHer" />
             </intent-filter>
 
             <intent-filter>
@@ -30,10 +30,9 @@
         </activity>
 
         <service
-            android:name=".service.ClipboardService"
+            android:name=".ClipboardService"
             android:foregroundServiceType="specialUse"
-            android:exported="false"
-            tools:node="replace" />
+            android:exported="false" />
 
         <receiver
             android:name=".receiver.BootReceiver"
@@ -45,3 +44,4 @@
 
     </application>
 </manifest>
+
