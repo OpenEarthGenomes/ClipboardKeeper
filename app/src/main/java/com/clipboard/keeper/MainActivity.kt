@@ -25,7 +25,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         startService(Intent(this, ClipboardService::class.java))
         setContent {
-            CyberUI()
+            // A neon stílus marad, közvetlenül a kódból!
+            Surface(modifier = Modifier.fillMaxSize(), color = Color(0xFF050505)) {
+                CyberUI()
+            }
         }
     }
 
@@ -36,12 +39,7 @@ class MainActivity : ComponentActivity() {
             history = DataHandler.getHistory(this@MainActivity)
         }
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFF050505))
-                .padding(16.dp)
-        ) {
+        Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
             Text(
                 text = "> INNER_OS v1.0 // CLIPBOARD_MONITOR",
                 color = Color(0xFF00FF41),
@@ -50,42 +48,26 @@ class MainActivity : ComponentActivity() {
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "STATUS: ACTIVE",
+                text = "STATUS: ACTIVE_LINK",
                 color = Color(0xFF00F3FF),
-                fontSize = 12.sp,
-                fontFamily = FontFamily.Monospace,
-                modifier = Modifier.padding(bottom = 20.dp)
+                fontSize = 10.sp,
+                fontFamily = FontFamily.Monospace
             )
-
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxSize()
-            ) {
+            Spacer(modifier = Modifier.height(20.dp))
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 items(history.reversed()) { item ->
-                    DataCard(item)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(1.dp, Brush.linearGradient(listOf(Color(0xFF00F3FF), Color(0xFFBC00FF))), RoundedCornerShape(8.dp))
+                            .background(Color(0x0DFFFFFF), RoundedCornerShape(8.dp))
+                            .padding(12.dp)
+                    ) {
+                        Text(text = item, color = Color.White, fontSize = 15.sp)
+                    }
                 }
             }
         }
     }
-
-    @Composable
-    fun DataCard(text: String) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(
-                    width = 1.dp,
-                    brush = Brush.linearGradient(colors = listOf(Color(0xFF00F3FF), Color(0xFFBC00FF))),
-                    shape = RoundedCornerShape(8.dp)
-                )
-                .background(Color(0x0DFFFFFF), RoundedCornerShape(8.dp))
-                .padding(12.dp)
-        ) {
-            Column {
-                Text(text = "RAW_DATA_HEX:", color = Color(0xFFBC00FF), fontSize = 9.sp, fontFamily = FontFamily.Monospace)
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(text = text, color = Color.White, fontSize = 15.sp)
-            }
-        }
-    }
 }
+
