@@ -42,7 +42,7 @@ class ClipboardService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_LOW)
             val manager = getSystemService(NotificationManager::class.java)
-            manager.createNotificationChannel(channel)
+            manager?.createNotificationChannel(channel)
         }
 
         val notification = NotificationCompat.Builder(this, channelId)
@@ -50,6 +50,7 @@ class ClipboardService : Service() {
             .setContentText("Vágólap figyelés aktív...")
             .setSmallIcon(android.R.drawable.ic_menu_save)
             .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setOngoing(true)
             .build()
 
         startForeground(1, notification)
@@ -66,3 +67,4 @@ class ClipboardService : Service() {
         serviceScope.cancel()
     }
 }
+
