@@ -40,14 +40,14 @@ class HistoryAdapter(
         holder.binding.tvPreview.text = item.preview
         holder.binding.tvTimestamp.text = dateFormat.format(Date(item.timestamp))
         
-        // Animáció slideUp
+        // JAVÍTÁS: Az animáció láncolása javítva
         if (position > lastAnimatedPosition) {
             holder.itemView.alpha = 0f
             holder.itemView.translationY = 100f
             holder.itemView.animate()
                 .alpha(1f)
                 .translationY(0f)
-                .duration = 300 + (position * 20L)
+                .setDuration(300 + (position * 20L))
                 .start()
             lastAnimatedPosition = position
         }
