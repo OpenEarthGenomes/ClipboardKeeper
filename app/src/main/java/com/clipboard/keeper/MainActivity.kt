@@ -1,12 +1,9 @@
 package com.clipboard.keeper
 
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -14,23 +11,23 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.clipboard.keeper.data.ClipboardDatabase
+import com.clipboard.keeper.databinding.ActivityMainBinding
 import com.clipboard.keeper.ui.BottomSheetMenu
 import com.clipboard.keeper.ui.HistoryAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: HistoryAdapter
-    private lateinit var clearButton: Button
     private lateinit var db: ClipboardDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Értesítési engedély Android 13+ (API 33+)
         if (Build.VERSION.SDK_INT >= 33) {
@@ -42,13 +39,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Foreground Service indítása
-        startForegroundService(Intent(this, ClipboardService::class.java))
+        val serviceIntent = Intent(this, ClipboardService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent)
+        } else {
+            startService(serviceIntent)
+        }
 
         db = ClipboardDatabase.getDatabase(this)
 
-        // RecyclerView
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        // RecyclerView beállítása
         adapter = HistoryAdapter { entryId ->
             val bottomSheet = BottomSheetMenu(this, entryId, db) { updatedEntry ->
                 lifecycleScope.launch {
@@ -57,18 +57,19 @@ class MainActivity : AppCompatActivity() {
             }
             bottomSheet.show()
         }
-        recyclerView.adapter = adapter
+        
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter = adapter
 
-        // Adatok betöltése
+        // Adatok automatikus betöltése és frissítése
         lifecycleScope.launch {
             db.dao().getAllPreviews().collectLatest { previews ->
                 adapter.submitList(previews)
             }
         }
 
-        // Összes törlése gomb
-        clearButton = findViewById(R.id.btnClear)
-        clearButton.setOnClickListener {
+        // Összes törlése gomb logikája
+        binding.btnClear.setOnClickListener {
             AlertDialog.Builder(this)
                 .setTitle("Cache törlése")
                 .setMessage("Biztosan törlöd az összes vágólap előzményt?")
@@ -83,3 +84,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
