@@ -21,13 +21,12 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Build Debug APK
-        # Itt a titok: a repó gyökeréből indítjuk a relatív úton
+        # Itt kivettük a working-directory-t, mert a gyökérben vagyunk
         run: gradle assembleDebug
-        working-directory: ./ClipboardKeeper
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: clipboard-keeper-final
-          # Az elérési utat is pontosítottuk a feltöltéshez
-          path: ClipboardKeeper/app/build/outputs/apk/debug/*.apk
+          # Itt is javítottuk az elérési utat a valósághoz
+          path: app/build/outputs/apk/debug/*.apk
