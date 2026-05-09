@@ -22,22 +22,17 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: gradle
+          # KIKAPCSOLJUK a cache-t, mert néha a cache hordozza a hibás configot
+          # cache: gradle 
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        # A trükk: törlünk minden környezeti változót, ami bekavarhat, 
-        # és a Gradle-nek belsőleg adjuk át a memóriát, megkerülve a rendszerszintű Java hívást.
+        # A megoldás: kitakarítjuk a változókat, és a parancs ELÉ írjuk a memóriát
+        # és NEM használunk idézőjelet a paraméterek körül a futtatásnál
         run: |
-          export JAVA_TOOL_OPTIONS=""
-          export _JAVA_OPTIONS=""
-          ./gradlew assembleDebug -Dorg.gradle.jvmargs="-Xmx2048m -XX:MaxMetaspaceSize=512m"
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: clipboard-keeper-final
-          path: app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
+          unset JAVA_TOOL_OPTIONS
+          unset _JAVA_OPTIONS
+          export JAVA_OPTS="-Xmx2048m -Xms512m"
+          ./gradlew assembleDebug --no-daemon
