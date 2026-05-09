@@ -28,13 +28,12 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        # Itt egy trükk: kiürítjük a JAVA_TOOL_OPTIONS-t, ami gyakran hordozza a hibás paramétert
+        # A trükk: törlünk minden környezeti változót, ami bekavarhat, 
+        # és a Gradle-nek belsőleg adjuk át a memóriát, megkerülve a rendszerszintű Java hívást.
         run: |
-          unset JAVA_TOOL_OPTIONS
-          export _JAVA_OPTIONS="-Xmx2048m -Xms512m"
-          ./gradlew assembleDebug
-        env:
-          JAVA_OPTS: "-Xmx2048m"
+          export JAVA_TOOL_OPTIONS=""
+          export _JAVA_OPTIONS=""
+          ./gradlew assembleDebug -Dorg.gradle.jvmargs="-Xmx2048m -XX:MaxMetaspaceSize=512m"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
