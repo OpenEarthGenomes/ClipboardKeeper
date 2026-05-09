@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background">#9EABA2</color>
-    <color name="surface">#BDD1C5</color>
-    <color name="primary">#EECC8C</color>
-    <color name="secondary">#E8B298</color>
-    <color name="tertiary">#D3A29D</color>
-    <color name="onPrimary">#4A2A28</color>
-    <color name="onSurface">#A36361</color>
-    <color name="onBackground">#3A2A28</color>
+    <color name="bg_dark">#0D0D0D</color>
+    <color name="neon_blue">#00F3FF</color>
+    <color name="neon_purple">#BC00FF</color>
+    <color name="glass_white">#26FFFFFF</color>
+    <color name="text_glow">#E0E0E0</color>
+    <color name="matrix_green">#00FF41</color>
 </resources>
