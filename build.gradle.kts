@@ -4,8 +4,10 @@ buildscript {
         mavenCentral()
     }
     dependencies {
+        // Android Gradle Plugin
         classpath("com.android.tools.build:gradle:8.2.0")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.20")
+        // Frissített Kotlin verzió a kompatibilitáshoz
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.10")
     }
 }
 
@@ -16,6 +18,7 @@ allprojects {
     }
 }
 
+// Modern megoldás a clean taskra, a deprecated buildDir elkerülésével
 tasks.register("clean", Delete::class) {
-    delete(rootProject.buildDir)
+    delete(layout.buildDirectory)
 }
