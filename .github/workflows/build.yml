@@ -27,7 +27,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        # A legtisztább futtatás: minden Java-változót törlünk a parancs sorában,
-        # és közvetlenül a Gradle-nek adjuk át a memóriát.
+        # A drasztikus megoldás: a parancs elé írt 'env -i' teljesen tiszta lapot indít.
+        # Csak a legszükségesebb utat (PATH) hagyjuk meg, minden mást (a hibás Java opciókat is) törlünk.
         run: |
-          JAVA_TOOL_OPTIONS="" _JAVA_OPTIONS="" ./gradlew assembleDebug --no-daemon -Dorg.gradle.jvmargs="-Xmx2048m -Xms512m"
+          env -i PATH="$PATH" HOME="$HOME" JAVA_HOME="$JAVA_HOME" ./gradlew assembleDebug --no-daemon -Dorg.gradle.jvmargs="-Xmx2048m"
