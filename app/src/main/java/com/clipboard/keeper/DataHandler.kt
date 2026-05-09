@@ -20,4 +20,3 @@ class DataHandler(private val context: Context) {
         return if (jsonFile.exists()) jsonFile.readText() else ""
     }
 }
-
