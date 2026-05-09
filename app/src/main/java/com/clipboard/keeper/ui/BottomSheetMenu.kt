@@ -3,6 +3,7 @@ package com.clipboard.keeper.ui
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -29,7 +30,9 @@ class BottomSheetMenu(
     
     fun show() {
         dialog = BottomSheetDialog(context)
-        val view = context.layoutInflater.inflate(R.layout.bottom_sheet_menu, null)
+        // JAVÍTÁS: context.layoutInflater helyett LayoutInflater.from(context)
+        val inflater = LayoutInflater.from(context)
+        val view = inflater.inflate(R.layout.bottom_sheet_menu, null)
         dialog.setContentView(view)
         
         view.findViewById<Button>(R.id.btnCopyToClipboard).setOnClickListener {
@@ -80,9 +83,7 @@ class BottomSheetMenu(
     private fun exportAsJson() {
         CoroutineScope(Dispatchers.IO).launch {
             val fullText = db.dao().getFullContent(entryId)
-            val entry = db.dao().getAllPreviews().collect { list ->
-                // Nem kell itt semmi
-            }
+            // Megjegyzés: A collect hívás itt felesleges volt, ha csak a szöveg kell
             val json = JSONObject().apply {
                 put("id", entryId)
                 put("content", fullText)
