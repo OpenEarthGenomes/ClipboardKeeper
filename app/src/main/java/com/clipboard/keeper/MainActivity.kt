@@ -25,7 +25,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         startService(Intent(this, ClipboardService::class.java))
         setContent {
-            // A neon stílus marad, közvetlenül a kódból!
             Surface(modifier = Modifier.fillMaxSize(), color = Color(0xFF050505)) {
                 CyberUI()
             }
@@ -47,12 +46,6 @@ class MainActivity : ComponentActivity() {
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold
             )
-            Text(
-                text = "STATUS: ACTIVE_LINK",
-                color = Color(0xFF00F3FF),
-                fontSize = 10.sp,
-                fontFamily = FontFamily.Monospace
-            )
             Spacer(modifier = Modifier.height(20.dp))
             LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 items(history.reversed()) { item ->
@@ -70,4 +63,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
