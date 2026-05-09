@@ -7,7 +7,6 @@ on:
     branches: [ "main" ]
 
 env:
-  # Kényszerítjük a Node 24-et a figyelmeztetések ellen
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
@@ -18,20 +17,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 21
+      - name: Set up JDK 17
+        # Visszaváltunk JDK 17-re, mert az Android Gradle Plugin 8.x ehhez van optimalizálva
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: '17'
           distribution: 'temurin'
 
-      # Ez az action automatikusan telepít egy JÓ Gradle-t, 
-      # függetlenül attól, hogy a te gradlew fájlod rossz-e
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          # Kényszerítjük a 8.10.2-es verziót, ami stabil az Androidhoz
+          gradle-version: 8.10.2
 
       - name: Build APK
-        # FIGYELEM: Itt nincs ott a ./ pont, simán a 'gradle' parancsot hívjuk!
-        run: gradle assembleDebug --no-daemon -Dorg.gradle.jvmargs="-Xmx2048m"
+        # Hozzáadtuk a --stacktrace-t, hogy ha mégis elbukna, pontosan lássuk miért
+        run: gradle assembleDebug --no-daemon --stacktrace -Dorg.gradle.jvmargs="-Xmx2048m"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -39,3 +40,4 @@ jobs:
           name: clipboard-keeper-final
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
+
