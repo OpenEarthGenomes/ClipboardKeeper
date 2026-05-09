@@ -8,9 +8,6 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  # Globálisan kiöljük a hibás változókat
-  JAVA_TOOL_OPTIONS: ""
-  _JAVA_OPTIONS: ""
 
 jobs:
   build:
@@ -30,10 +27,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        # Kényszerítjük a tiszta környezetet és manuálisan átadjuk a Java utat
+        # A legtisztább futtatás: minden Java-változót törlünk a parancs sorában,
+        # és közvetlenül a Gradle-nek adjuk át a memóriát.
         run: |
-          export JAVA_HOME=/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.10-7/x64
-          export PATH=$JAVA_HOME/bin:$PATH
-          unset JAVA_TOOL_OPTIONS
-          unset _JAVA_OPTIONS
-          ./gradlew assembleDebug --no-daemon -Dorg.gradle.jvmargs="-Xmx2048m"
+          JAVA_TOOL_OPTIONS="" _JAVA_OPTIONS="" ./gradlew assembleDebug --no-daemon -Dorg.gradle.jvmargs="-Xmx2048m -Xms512m"
