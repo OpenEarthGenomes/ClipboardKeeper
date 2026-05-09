@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.ClipboardKeeper" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#CCB87C</item>
+        <item name="colorSurface">#8FA69A</item>
+        <item name="android:colorBackground">#5C6B63</item>
+        <item name="colorOnSurface">#EEDDCC</item>
+    </style>
+</resources>
