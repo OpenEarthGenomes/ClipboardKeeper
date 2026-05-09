@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -20,6 +21,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Build Debug APK
+        # Itt a titok: a repó gyökeréből indítjuk a relatív úton
         run: gradle assembleDebug
         working-directory: ./ClipboardKeeper
 
@@ -27,4 +29,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: clipboard-keeper-final
+          # Az elérési utat is pontosítottuk a feltöltéshez
           path: ClipboardKeeper/app/build/outputs/apk/debug/*.apk
