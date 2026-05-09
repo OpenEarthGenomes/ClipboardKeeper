@@ -28,7 +28,10 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
+        # A JAVA_OPTS üresen hagyásával kényszerítjük a rendszert, hogy ne használjon hibás alapértelmezett memóriaparamétereket
         run: ./gradlew assembleDebug
+        env:
+          JAVA_OPTS: "-Xmx2048m"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
