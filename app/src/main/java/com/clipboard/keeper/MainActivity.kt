@@ -11,4 +11,3 @@ class MainActivity : AppCompatActivity() {
         startForegroundService(serviceIntent)
     }
 }
-
