@@ -6,12 +6,8 @@ on:
   pull_request:
     branches: [ "main" ]
 
-# Globális környezeti változók - Ez minden lépésre érvényes lesz
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  # Itt kényszerítjük a 2GB memóriát az egész folyamatra, így elkerüljük a 64MB-os hibát
-  _JAVA_OPTIONS: "-Xmx2048m -Xms512m"
-  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx2048m"
 
 jobs:
   build:
@@ -32,8 +28,13 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        # Most már csak a tiszta parancsot futtatjuk, a fenti 'env' vigyáz a memóriára
-        run: ./gradlew assembleDebug
+        # Itt egy trükk: kiürítjük a JAVA_TOOL_OPTIONS-t, ami gyakran hordozza a hibás paramétert
+        run: |
+          unset JAVA_TOOL_OPTIONS
+          export _JAVA_OPTIONS="-Xmx2048m -Xms512m"
+          ./gradlew assembleDebug
+        env:
+          JAVA_OPTS: "-Xmx2048m"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
